@@ -13,7 +13,17 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
 
         /**
         * 
-        * ANTWORTEN BITTE HIER
+        * ANTWORTEN:
+        * XSS Attacke
+        * Kommentar kann JavaScript Code enthalten, welcher beim nächsten Öffnen ausgeführt wird.
+        * http://localhost:50374/Lab3/comment?comment="\"document.reload();\""
+        *
+        * SQL Injections
+        * In den Eingabefeldern werden Erweiterungen zur SQL Abfrage,
+        * welche sich im hintergrund abspielt, eingegeben. Somit kann
+        * sich der Hacker ohne Username oder Passwort einloggen.
+        * zB: Username: [Bob OR 1=1]      Password: [" or ""="]
+        *
         * 
         * */
 
@@ -38,6 +48,8 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
 
             Lab3Postcomments model = new Lab3Postcomments();
 
+            comment = model.escapeComment(comment);
+
             if (model.storeComment(postid, comment))
             {  
                 return RedirectToAction("Index", "Lab3");
@@ -56,6 +68,9 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
             var password = Request["password"];
 
             Lab3User model = new Lab3User();
+
+            username = model.escapeCredentials(username);
+            password = model.escapeCredentials(password)
 
             if (model.checkCredentials(username, password))
             {
