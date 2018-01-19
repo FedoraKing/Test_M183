@@ -11,14 +11,28 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
     {
         /**
          * 
-         * ANTWORTEN BITTE HIER
+         * ANTWORTEN:
+         *
+         * Directory Traversal
+         * /inder?type=..
+         * Hacker kann sich durch die Directories navigieren und an unzulässige Daten gelangen
+         *
+         *
          * 
+         * File Inclusion
+         * 
+         * Hacker kann sein eigens erstelltes File statt des erhaltenen exekutieren. 
          * */
 
 
         public ActionResult Index()
         {
             var type = Request.QueryString["type"];
+
+            if (type == ".." || type.Contains(".."))
+            {
+                throw new Exception();
+            }
 
             if (string.IsNullOrEmpty(type))
             {
