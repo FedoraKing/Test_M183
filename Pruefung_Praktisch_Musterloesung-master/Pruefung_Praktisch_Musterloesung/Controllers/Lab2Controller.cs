@@ -17,8 +17,18 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
 
         /**
         * 
-        * ANTWORTEN BITTE HIER
-        * 
+        * ANTWORTEN:
+        * SQL-Injections
+        * In den Eingabefeldern werden Erweiterungen zur SQL Abfrage,
+        * welche sich im hintergrund abspielt, eingegeben. Somit kann
+        * sich der Hacker ohne Username oder Passwort einloggen.
+        * zB: Username: [Bob OR 1=1]      Password: [" or ""="]
+        *
+        * Session Fixation
+        * Hans schikt Heidi einen Link mit seiner SessionID
+        * Heidi öffnet diesen Link mit der Session
+        * Heidi hat nun Zugriff auf Hans Account
+        *
         * */
 
         public ActionResult Index() {
@@ -48,7 +58,10 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
             //var ip = Request.UserHostAddress;
 
             Lab2Userlogin model = new Lab2Userlogin();
-
+            if (!model.checkUserEnvironment(username, password, used_browser, ip))
+            {
+                throw new UnauthorizedAccessException();
+}
             if (model.checkCredentials(username, password))
             {
                 model.storeSessionInfos(username, password, sessionid);
@@ -80,13 +93,17 @@ namespace Pruefung_Praktisch_Musterloesung.Controllers
             {
                 sessionid = Request.QueryString["sid"];
             }
+
             
             // hints:
             //var used_browser = Request.Browser.Platform;
             //var ip = Request.UserHostAddress;
 
             Lab2Userlogin model = new Lab2Userlogin();
-
+            if (!model.checkUserEnvironment(username, password, used_browser, ip))
+            {
+                throw new UnauthorizedAccessException();
+            }
             if (model.checkSessionInfos(sessionid))
             {
                 return View();
